@@ -1,0 +1,44 @@
+/*
+ * Copyright 2026 Gautam Gupta
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.github.guptagautam768.aeh.schema;
+
+/** Thrown when a document's {@code schemaVersion} is outside the supported window. */
+public final class UnsupportedSchemaException extends IllegalArgumentException {
+
+  private final String document;
+  private final String found;
+  private final String supported;
+
+  public UnsupportedSchemaException(String document, String found, String supported) {
+    super(
+        document + " schemaVersion " + found + " is not supported (supported: " + supported + ")");
+    this.document = document;
+    this.found = found;
+    this.supported = supported;
+  }
+
+  public String document() {
+    return document;
+  }
+
+  public String found() {
+    return found;
+  }
+
+  public String supported() {
+    return supported;
+  }
+}
