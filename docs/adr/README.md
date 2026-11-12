@@ -17,5 +17,6 @@ Decisions on *how* to build what [SDR-0001 v1.0 (APPROVED)](../sdr/SDR-0001-agen
 | [0011](./0011-reports-json-html-junit-xml.md) | Reports: versioned JSON schema, single-file offline HTML, JUnit XML and Markdown summary | Accepted |
 | [0012](./0012-testing-ci-and-licensing.md) | Testing, CI and licensing: JUnit 5, WireMock, Testcontainers (Ollama), Gradle TestKit, GitHub Actions, CodeQL, Apache-2.0 | Accepted |
 | [0013](./0013-demo-agent-customer-support-example.md) | Demo agent: Spring AI customer-support agent over fake in-memory data | Accepted |
+| [0014](./0014-redaction-traversal-and-overlap.md) | Redaction traversal order and overlap resolution | Proposed |
 
 **Process:** Proposed → reviewed by Gautam Gupta → Accepted / Rejected. No implementation before acceptance. Superseding decisions get a new number.
