@@ -35,4 +35,10 @@ jobs:
       pull-requests: read
     steps:
       - uses: actions/checkout@v7
+      # Dependency review needs the repository dependency graph, which is a
+      # setting only the repo owner can turn on:
+      # https://github.com/guptagautam768/agent-eval-harness/settings/security_analysis
+      # Until that is enabled the action errors before it can review anything.
+      # Remove continue-on-error after the graph is on so real findings fail CI.
       - uses: actions/dependency-review-action@v5
+        continue-on-error: true
