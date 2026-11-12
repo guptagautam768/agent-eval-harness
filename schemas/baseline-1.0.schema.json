@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/guptagautam768/agent-eval-harness/schemas/baseline-1.0.schema.json",
+  "title": "Baseline 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "suite",
+    "createdAt",
+    "harnessVersion",
+    "configFingerprint",
+    "cases",
+    "aggregates",
+    "gateRules",
+    "allowRegression"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "suite": { "type": "string", "minLength": 1 },
+    "createdAt": { "type": "string" },
+    "harnessVersion": { "type": "string" },
+    "configFingerprint": { "type": "string" },
+    "cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["caseId", "metrics", "passed"],
+        "properties": {
+          "caseId": { "type": "string", "pattern": "^[a-z0-9._-]+$" },
+          "metrics": { "type": "object", "additionalProperties": { "type": "string" } },
+          "passed": { "type": "boolean" }
+        }
+      }
+    },
+    "aggregates": { "type": "object", "additionalProperties": { "type": "string" } },
+    "gateRules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["metric", "direction", "floor", "ceiling", "tolerance", "severity"],
+        "properties": {
+          "metric": { "type": "string" },
+          "direction": { "enum": ["higher", "lower"] },
+          "floor": { "type": ["string", "null"] },
+          "ceiling": { "type": ["string", "null"] },
+          "tolerance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "value"],
+            "properties": {
+              "kind": { "enum": ["abs", "pct"] },
+              "value": { "type": "string" }
+            }
+          },
+          "severity": { "enum": ["MUST", "SHOULD", "INFO"] }
+        }
+      }
+    },
+    "allowRegression": { "type": "boolean" }
+  }
+}

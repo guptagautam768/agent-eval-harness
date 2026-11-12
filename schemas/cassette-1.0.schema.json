@@ -1,0 +1,230 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/guptagautam768/agent-eval-harness/schemas/cassette-1.0.schema.json",
+  "title": "Cassette 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "caseId",
+    "suite",
+    "recordedAt",
+    "harnessVersion",
+    "agent",
+    "integration",
+    "redaction",
+    "runs"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "caseId": { "type": "string", "pattern": "^[a-z0-9._-]+$" },
+    "suite": { "type": "string", "minLength": 1 },
+    "recordedAt": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{3}Z$" },
+    "harnessVersion": { "type": "string", "minLength": 1 },
+    "agent": { "$ref": "#/$defs/agent" },
+    "integration": { "enum": ["spring-ai", "langchain4j", "http"] },
+    "redaction": { "$ref": "#/$defs/redaction" },
+    "runs": { "type": "array", "items": { "$ref": "#/$defs/run" } }
+  },
+  "$defs": {
+    "decimal": { "type": "string", "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$" },
+    "json": true,
+    "agent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "redaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policyId", "rulesApplied", "counts"],
+      "properties": {
+        "policyId": { "type": "string" },
+        "rulesApplied": { "type": "array", "items": { "type": "string" } },
+        "counts": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } }
+      }
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["inputTokens", "outputTokens", "estimatedCostUsd", "priceTableVersion"],
+      "properties": {
+        "inputTokens": { "type": ["integer", "null"], "minimum": 0 },
+        "outputTokens": { "type": ["integer", "null"], "minimum": 0 },
+        "estimatedCostUsd": { "anyOf": [{ "$ref": "#/$defs/decimal" }, { "type": "null" }] },
+        "priceTableVersion": { "type": ["string", "null"] }
+      }
+    },
+    "message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "content", "name", "toolCallId", "toolCalls"],
+      "properties": {
+        "role": { "type": "string" },
+        "content": { "$ref": "#/$defs/json" },
+        "name": { "type": ["string", "null"] },
+        "toolCallId": { "type": ["string", "null"] },
+        "toolCalls": { "type": "array", "items": { "$ref": "#/$defs/requestedTool" } }
+      }
+    },
+    "requestedTool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "arguments"],
+      "properties": {
+        "id": { "type": ["string", "null"] },
+        "name": { "type": "string" },
+        "arguments": { "$ref": "#/$defs/json" }
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runId", "input", "config", "steps", "finalOutput", "usage", "latencyMs", "status", "error"],
+      "properties": {
+        "runId": { "type": "string" },
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["messages", "variables"],
+          "properties": {
+            "messages": { "type": "array", "items": { "$ref": "#/$defs/message" } },
+            "variables": { "type": "object", "additionalProperties": { "$ref": "#/$defs/json" } }
+          }
+        },
+        "config": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["model", "provider", "temperature", "promptTemplateId", "promptTemplateVersion", "toolSchemaHash"],
+          "properties": {
+            "model": { "type": "string" },
+            "provider": { "type": "string" },
+            "temperature": { "anyOf": [{ "$ref": "#/$defs/decimal" }, { "type": "null" }] },
+            "promptTemplateId": { "type": ["string", "null"] },
+            "promptTemplateVersion": { "type": ["string", "null"] },
+            "toolSchemaHash": { "type": ["string", "null"] }
+          }
+        },
+        "steps": { "type": "array", "items": { "$ref": "#/$defs/step" } },
+        "finalOutput": { "type": ["string", "null"] },
+        "usage": { "anyOf": [{ "$ref": "#/$defs/usage" }, { "type": "null" }] },
+        "latencyMs": { "type": "integer", "minimum": 0 },
+        "status": { "enum": ["ok", "error", "timeout", "aborted"] },
+        "error": { "type": ["string", "null"] }
+      }
+    },
+    "step": {
+      "oneOf": [
+        { "$ref": "#/$defs/llm" },
+        { "$ref": "#/$defs/tool" }
+      ]
+    },
+    "llm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type", "seq", "requestHash", "provider", "model", "params", "headers", "messages",
+        "toolSchemas", "response", "usage", "latencyMs", "gatewayMeta", "chunks", "error"
+      ],
+      "properties": {
+        "type": { "const": "llm" },
+        "seq": { "type": "integer", "minimum": 0 },
+        "requestHash": { "type": "string" },
+        "provider": { "type": "string" },
+        "model": { "type": "string" },
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["temperature", "maxTokens", "stream", "seed", "user", "additional"],
+          "properties": {
+            "temperature": { "anyOf": [{ "$ref": "#/$defs/decimal" }, { "type": "null" }] },
+            "maxTokens": { "type": ["integer", "null"], "minimum": 0 },
+            "stream": { "type": ["boolean", "null"] },
+            "seed": { "type": ["integer", "null"] },
+            "user": { "type": ["string", "null"] },
+            "additional": { "type": "object", "additionalProperties": { "$ref": "#/$defs/json" } }
+          }
+        },
+        "headers": { "type": "object", "additionalProperties": { "type": "string" } },
+        "messages": { "type": "array", "items": { "$ref": "#/$defs/message" } },
+        "toolSchemas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "jsonSchema"],
+            "properties": {
+              "name": { "type": "string" },
+              "jsonSchema": { "$ref": "#/$defs/json" }
+            }
+          }
+        },
+        "response": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["messages", "toolCalls", "finishReason"],
+          "properties": {
+            "messages": { "type": "array", "items": { "$ref": "#/$defs/message" } },
+            "toolCalls": { "type": "array", "items": { "$ref": "#/$defs/requestedTool" } },
+            "finishReason": { "type": ["string", "null"] }
+          }
+        },
+        "usage": { "anyOf": [{ "$ref": "#/$defs/usage" }, { "type": "null" }] },
+        "latencyMs": { "type": "integer", "minimum": 0 },
+        "gatewayMeta": {
+          "anyOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["cacheHit", "route", "usageId"],
+              "properties": {
+                "cacheHit": { "type": ["boolean", "null"] },
+                "route": { "type": ["string", "null"] },
+                "usageId": { "type": ["string", "null"] }
+              }
+            }
+          ]
+        },
+        "chunks": {
+          "anyOf": [
+            { "type": "null" },
+            {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["index", "content", "finishReason"],
+                "properties": {
+                  "index": { "type": "integer", "minimum": 0 },
+                  "content": { "type": ["string", "null"] },
+                  "finishReason": { "type": ["string", "null"] }
+                }
+              }
+            }
+          ]
+        },
+        "error": { "type": ["string", "null"] }
+      }
+    },
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "seq", "parentLlmSeq", "toolName", "arguments", "result", "latencyMs", "error"],
+      "properties": {
+        "type": { "const": "tool" },
+        "seq": { "type": "integer", "minimum": 0 },
+        "parentLlmSeq": { "type": "integer", "minimum": 0 },
+        "toolName": { "type": "string" },
+        "arguments": { "$ref": "#/$defs/json" },
+        "result": { "$ref": "#/$defs/json" },
+        "latencyMs": { "type": "integer", "minimum": 0 },
+        "error": { "type": ["string", "null"] }
+      }
+    }
+  }
+}
