@@ -6,7 +6,7 @@ junit-platform = "1.14.4"
 assertj = "3.27.7"
 picocli = "4.7.7"
 json-schema = "2.0.8"
-spotless = "7.2.1"
+spotless = "8.11.0"
 google-java-format = "1.25.2"
 license-report = "3.1.5"
 
