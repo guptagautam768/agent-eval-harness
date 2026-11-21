@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1.0",
+  "version": "builtin-2026.11",
+  "models": {
+    "llama3.1:8b": {
+      "inputPer1kUsd": "0",
+      "outputPer1kUsd": "0"
+    },
+    "qwen2.5:7b-instruct": {
+      "inputPer1kUsd": "0",
+      "outputPer1kUsd": "0"
+    }
+  }
+}

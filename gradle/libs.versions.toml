@@ -1,0 +1,25 @@
+[versions]
+jackson = "2.23.0"
+slf4j = "2.0.20"
+junit = "5.14.4"
+junit-platform = "1.14.4"
+assertj = "3.27.7"
+picocli = "4.7.7"
+json-schema = "2.0.8"
+spotless = "7.2.1"
+google-java-format = "1.25.2"
+license-report = "3.1.5"
+
+[libraries]
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-platform" }
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+picocli = { module = "info.picocli:picocli", version.ref = "picocli" }
+json-schema-validator = { module = "com.networknt:json-schema-validator", version.ref = "json-schema" }
+
+[plugins]
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+license-report = { id = "com.github.jk1.dependency-license-report", version.ref = "license-report" }

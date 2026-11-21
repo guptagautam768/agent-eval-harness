@@ -1,0 +1,7 @@
+{
+  "allowedLicenses": [
+    {
+      "moduleLicense": "(?i).*(apache|mit license|mit\\b|bsd|eclipse public license|epl|mozilla public license|\\bmpl\\b|isc license|\\bisc\\b|public domain|bouncy castle|cddl).*"
+    }
+  ]
+}

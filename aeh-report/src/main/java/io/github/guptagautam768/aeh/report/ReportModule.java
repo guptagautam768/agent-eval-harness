@@ -1,0 +1,29 @@
+/*
+ * Copyright 2026 Gautam Gupta
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.github.guptagautam768.aeh.report;
+
+/**
+ * JSON and HTML report rendering arrive in weeks 3 and 5. Placeholder so the module compiles in
+ * week 1.
+ */
+public final class ReportModule {
+
+  private ReportModule() {}
+
+  public static String artifact() {
+    return "aeh-report";
+  }
+}
